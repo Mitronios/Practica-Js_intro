@@ -27,7 +27,7 @@ const musicCatalog = () => {
    * @param {string} playlistName - The name of the new playlist.
    */
   const createPlaylist = (playlistName) => {
-    let playlist = {
+    const playlist = {
       name: playlistName,
       songs: [],
     };
@@ -38,15 +38,15 @@ const musicCatalog = () => {
    * Gets all playlists in the catalog.
    * @returns {Playlist[]} The list of all playlists.
    */
-  const getAllPlaylists = () => {
-    return playlists;
-  };
+  const getAllPlaylists = () => playlists;
 
   /**
    * Removes a playlist from the catalog.
    * @param {string} playlistName - The name of the playlist to remove.
    */
-  const removePlaylist = (playlistName) => {};
+  const removePlaylist = (playlistName) => {
+    playlists = playlists.filter((playlist) => playlist.name !== playlistName);
+  };
 
   /**
    * Adds a song to a specific playlist.
@@ -54,7 +54,19 @@ const musicCatalog = () => {
    * @param {{ title: string, artist: string, genre: string, duration: number }} song - The song to add to the playlist.
    * @throws {Error} If the playlist is not found.
    */
-  const addSongToPlaylist = (playlistName, song) => {};
+  const addSongToPlaylist = (playlistName, song) => {
+    const playlist = playlists.find(({ name }) => name === playlistName);
+    if (!playlist) {
+      throw new Error("Playlist not found, try again please");
+    }
+    const newSong = { ...song, favorite: false };
+    playlists = playlists.map((playlistElement) => {
+      if (playlistElement.name === playlistName) {
+        return { ...playlist, songs: [...playlist.songs, newSong] };
+      }
+      return playlistElement;
+    });
+  };
 
   /**
    * Removes a song from a specific playlist.
